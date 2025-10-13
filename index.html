@@ -1841,4 +1841,1837 @@
         <div class="container">
             <!-- Header -->
             <div class="header">
-                <div class="logo-
+                <div class="logo-logo-section">
+                    <img src="logo.png" alt="Team Brunão" class="logo-img" onerror="this.style.display='none'">
+                    <div class="logo-text">
+                        <h1>Team Brunão</h1>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <img id="headerAvatar" src="https://via.placeholder.com/50" alt="Avatar" class="user-avatar">
+                    <span id="headerName">Usuário</span>
+                    <button class="btn btn-danger" onclick="logout()">Sair</button>
+                </div>
+            </div>
+
+            <!-- Member Dashboard -->
+            <div id="memberDashboard" class="hidden">
+                <div class="welcome-card">
+                    <h2>Bem-vindo, <span id="welcomeName"></span>! 💪</h2>
+                    <p>Seu treino semanal está pronto!</p>
+                </div>
+
+                <!-- Streak Container -->
+                <div id="streakContainer" class="streak-container"></div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="switchMemberTab('training')">📅 Meu Treino</div>
+                    <div class="tab" onclick="switchMemberTab('attendance')">✅ Presença</div>
+                    <div class="tab" onclick="switchMemberTab('products')">🛍️ Produtos</div>
+                    <div class="tab" onclick="switchMemberTab('cart')">🛒 Carrinho <span id="cartCount" class="badge-stock" style="margin-left: 5px;">0</span></div>
+                    <div class="tab" onclick="switchMemberTab('profile')">⚙️ Perfil</div>
+                </div>
+
+                <!-- Training Tab -->
+                <div id="memberTrainingTab">
+                    <h2 style="margin-bottom: 20px;">Meu Treino Semanal</h2>
+                    <div class="training-schedule" id="memberTrainingSchedule"></div>
+                </div>
+
+                <!-- Attendance Tab -->
+                <div id="memberAttendanceTab" class="hidden">
+                    <h2 style="margin-bottom: 20px;">Controle de Presença Semanal</h2>
+                    <div class="info-box">
+                        <h4>📋 Como funciona?</h4>
+                        <p>
+                            • Clique nos dias para marcar sua presença (azul) ✅<br>
+                            • Para marcar falta, você DEVE justificar (vermelho) ❌<br>
+                            • Você tem 1 salvamento por semana 🛡️<br>
+                            • Com 1 falta, seu foguinho congela ❄️<br>
+                            • Com 2 faltas, seu foguinho reseta 🔄<br>
+                            • O administrador pode salvar sua sequência em casos especiais 💾
+                        </p>
+                    </div>
+                    <div id="weeklyAttendanceContainer" class="weekly-attendance"></div>
+                </div>
+
+                <!-- Products Tab -->
+                <div id="memberProductsTab" class="hidden">
+                    <h2 style="margin-bottom: 20px;">Produtos Disponíveis</h2>
+                    <div class="info-box">
+                        <h4>🛍️ Como comprar?</h4>
+                        <p>• Adicione os produtos ao carrinho<br>
+                        • Clique em "Ver Tabela Nutricional" para ver detalhes dos suplementos<br>
+                        • Vá para a aba "Carrinho" e revise seus itens<br>
+                        • Clique em "Finalizar Pedido" para enviar automaticamente para o WhatsApp do Brunão!</p>
+                    </div>
+                    <div class="cards-grid" id="memberProductsList"></div>
+                </div>
+
+                <!-- Cart Tab -->
+                <div id="memberCartTab" class="hidden">
+                    <h2 style="margin-bottom: 20px;">Meu Carrinho de Compras</h2>
+                    <div id="cartItems"></div>
+                    <div id="cartTotal" class="cart-total hidden">
+                        <h3>Total: R$ <span id="cartTotalValue">0.00</span></h3>
+                        <button class="btn btn-whatsapp" style="width: 100%; margin-top: 15px; justify-content: center;" onclick="sendOrderToWhatsApp()">
+                            <span style="font-size: 20px;">📱</span> Finalizar Pedido no WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="memberProfileTab" class="hidden">
+                    <div class="card" style="max-width: 600px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 25px;">Editar Perfil</h2>
+                        <div class="form-group">
+                            <label>Apelido</label>
+                            <input type="text" id="editNickname" placeholder="Seu apelido">
+                        </div>
+                        <div class="form-group">
+                            <label>Foto de Perfil</label>
+                            <div class="file-upload">
+                                <input type="file" id="editPhoto" accept="image/*" onchange="previewPhoto(this, 'editPhotoPreview')">
+                                <label for="editPhoto" class="file-upload-btn">Alterar Foto</label>
+                                <img id="editPhotoPreview" class="preview-img">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Novo Email (Opcional)</label>
+                            <input type="email" id="editEmail" placeholder="Novo email">
+                        </div>
+                        <div class="form-group">
+                            <label>Nova Senha (Opcional)</label>
+                            <input type="password" id="editPassword" placeholder="Nova senha">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="updateProfile()">Salvar Alterações</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard -->
+            <div id="adminDashboard" class="hidden">
+                <div class="welcome-card">
+                    <h2>Painel Administrativo 👨‍💼</h2>
+                    <p>Gerencie usuários, treinos, produtos e ofertas</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="switchAdminTab('pending')">⏳ Pendentes</div>
+                    <div class="tab" onclick="switchAdminTab('approved')">✅ Aprovados</div>
+                    <div class="tab" onclick="switchAdminTab('banned')">🚫 Banidos</div>
+                    <div class="tab" onclick="switchAdminTab('products')">🛍️ Produtos</div>
+                    <div class="tab" onclick="switchAdminTab('megaoffer')">🔥 Mega Oferta</div>
+                    <div class="tab" onclick="switchAdminTab('profile')">⚙️ Perfil</div>
+                </div>
+
+                <!-- Pending Tab -->
+                <div id="adminPendingTab">
+                    <h2 style="margin-bottom: 20px;">Contas Pendentes</h2>
+                    <div class="cards-grid" id="pendingUsers"></div>
+                </div>
+
+                <!-- Approved Tab -->
+                <div id="adminApprovedTab" class="hidden">
+                    <div class="search-bar">
+                        <input type="text" id="searchUsers" placeholder="🔍 Buscar por nome, apelido ou email..." oninput="searchUsers()">
+                    </div>
+                    <h2 style="margin-bottom: 20px;">Contas Aprovadas</h2>
+                    <div class="cards-grid" id="approvedUsers"></div>
+                </div>
+
+                <!-- Banned Tab -->
+                <div id="adminBannedTab" class="hidden">
+                    <h2 style="margin-bottom: 20px;">Contas Banidas</h2>
+                    <div class="cards-grid" id="bannedUsers"></div>
+                </div>
+
+                <!-- Products Tab -->
+                <div id="adminProductsTab" class="hidden">
+                    <button class="btn btn-success" style="margin-bottom: 20px;" onclick="openProductModal()">➕ Criar Produto</button>
+                    <div class="cards-grid" id="productsList"></div>
+                </div>
+
+                <!-- Mega Offer Tab -->
+                <div id="adminMegaOfferTab" class="hidden">
+                    <h2 style="margin-bottom: 20px;">Gerenciar Mega Oferta</h2>
+                    <div class="info-box">
+                        <h4>🔥 Sobre a Mega Oferta</h4>
+                        <p>• A mega oferta aparece automaticamente quando os clientes fazem login<br>
+                        • É exibida como um popup destacado e também na lista de produtos<br>
+                        • Perfeita para promoções especiais e ofertas relâmpago!</p>
+                    </div>
+                    <div class="card" style="max-width: 700px; margin: 20px auto;">
+                        <h3 style="margin-bottom: 20px;">Criar/Editar Mega Oferta</h3>
+                        <div class="form-group">
+                            <label>Título da Oferta</label>
+                            <input type="text" id="megaOfferTitle" placeholder="Ex: MEGA PROMOÇÃO WHEY PROTEIN">
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea id="megaOfferDescription" placeholder="Descrição da oferta..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Preço Original (R$)</label>
+                            <input type="number" id="megaOfferOriginalPrice" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Preço com Desconto (R$)</label>
+                            <input type="number" id="megaOfferNewPrice" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Imagem da Oferta</label>
+                            <div class="file-upload">
+                                <input type="file" id="megaOfferImage" accept="image/*" onchange="previewPhoto(this, 'megaOfferImagePreview')">
+                                <label for="megaOfferImage" class="file-upload-btn">Escolher Imagem</label>
+                                <img id="megaOfferImagePreview" class="preview-img hidden">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Término</label>
+                            <input type="date" id="megaOfferEndDate">
+                        </div>
+                        <button class="btn btn-success" style="width: 100%;" onclick="saveMegaOffer()">💾 Salvar Mega Oferta</button>
+                    </div>
+                    <div id="currentMegaOffer"></div>
+                </div>
+
+                <!-- Admin Profile Tab -->
+                <div id="adminProfileTab" class="hidden">
+                    <div class="card" style="max-width: 600px; margin: 0 auto;">
+                        <h2 style="margin-bottom: 25px;">Editar Perfil</h2>
+                        <div class="form-group">
+                            <label>Apelido</label>
+                            <input type="text" id="adminEditNickname" placeholder="Seu apelido">
+                        </div>
+                        <div class="form-group">
+                            <label>Foto de Perfil</label>
+                            <div class="file-upload">
+                                <input type="file" id="adminEditPhoto" accept="image/*" onchange="previewPhoto(this, 'adminEditPhotoPreview')">
+                                <label for="adminEditPhoto" class="file-upload-btn">Alterar Foto</label>
+                                <img id="adminEditPhotoPreview" class="preview-img">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="updateAdminProfile()">Salvar Alterações</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training Modal -->
+    <div id="trainingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Treino</h2>
+                <button class="close-btn" onclick="closeTrainingModal()">×</button>
+            </div>
+            <div class="training-schedule" id="trainingModalContent"></div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="saveTraining()">Salvar Treino</button>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalhes do Usuário</h2>
+                <button class="close-btn" onclick="closeUserDetailsModal()">×</button>
+            </div>
+            <div style="text-align: center; margin-bottom: 30px;">
+                <img id="userDetailPhoto" src="" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 15px;">
+                <h2 id="userDetailName" style="font-size: 28px; margin-bottom: 5px;"></h2>
+                <p id="userDetailNickname" style="color: #b0b0b0; font-size: 18px; margin-bottom: 5px;"></p>
+                <p id="userDetailEmail" style="color: #888; font-size: 16px;"></p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="openTrainingModalForUser()">✏️ Editar Treino</button>
+                <button class="btn btn-warning" style="flex: 1;" onclick="viewUserAttendance()">📅 Ver Presença</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Criar Produto</h2>
+                <button class="close-btn" onclick="closeProductModal()">×</button>
+            </div>
+            <div class="form-group">
+                <label>Nome do Produto</label>
+                <input type="text" id="productName" placeholder="Nome do produto">
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="productDescription" placeholder="Descrição do produto" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Preço (R$)</label>
+                <input type="number" id="productPrice" placeholder="0.00" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Estoque Disponível</label>
+                <input type="number" id="productStock" placeholder="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                <input type="text" id="productCategory" placeholder="Ex: Suplementos, Roupas">
+            </div>
+            <div class="form-group">
+                <label>Imagem do Produto</label>
+                <div class="file-upload">
+                    <input type="file" id="productImage" accept="image/*" onchange="previewPhoto(this, 'productImagePreview')">
+                    <label for="productImage" class="file-upload-btn">Escolher Imagem</label>
+                    <img id="productImagePreview" class="preview-img hidden">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Tabela Nutricional (Opcional)</label>
+                <div class="file-upload">
+                    <input type="file" id="productNutritionTable" accept="image/*" onchange="previewPhoto(this, 'nutritionTablePreview')">
+                    <label for="productNutritionTable" class="file-upload-btn">Escolher Tabela</label>
+                    <img id="nutritionTablePreview" class="preview-img hidden">
+                </div>
+            </div>
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="productHasOffer" onchange="toggleOfferFields()">
+                    Produto em Promoção
+                </label>
+            </div>
+            <div id="offerFields" class="hidden">
+                <div class="form-group">
+                    <label>Desconto (%)</label>
+                    <input type="number" id="productDiscount" placeholder="0" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>Data de Término da Oferta</label>
+                    <input type="date" id="productOfferEnd">
+                </div>
+            </div>
+            <button class="btn btn-success" style="width: 100%;" onclick="saveProduct()">Salvar Produto</button>
+        </div>
+    </div>
+
+    <!-- Image Zoom Modal -->
+    <div id="imageZoomModal" class="image-zoom-modal">
+        <button class="zoom-close" onclick="closeImageZoom()">×</button>
+        <div class="zoom-content">
+            <img id="zoomImage" class="zoom-image" src="" alt="Zoom" onclick="toggleZoom()">
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()">🔍+</button>
+                <button class="zoom-btn" onclick="zoomOut()">🔍-</button>
+                <button class="zoom-btn" onclick="resetZoom()">↺</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateEmail, updatePassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, query, where, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBphL-F6DZhDrBY49K7SsMebBYSlWoQ9K4",
+            authDomain: "teambrunao-63fa2.firebaseapp.com",
+            projectId: "teambrunao-63fa2",
+            storageBucket: "teambrunao-63fa2.firebasestorage.app",
+            messagingSenderId: "518397572811",
+            appId: "1:518397572811:web:584c8ae32315656a388d4e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.auth = auth;
+        window.db = db;
+        window.currentUser = null;
+        window.currentEditingUser = null;
+        window.currentEditingProduct = null;
+        window.shoppingCart = [];
+        window.currentJustificationDay = null;
+        window.zoomLevel = 1;
+
+        // Admin Emails
+        const ADMIN_EMAILS = [
+            'academia.team.brunao@gmail.com',
+            'kartywillytdc@gmail.com'
+        ];
+
+        // Theme Management
+        window.changeTheme = function(theme) {
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.body.className = document.body.className.replace(/theme-\w+/, `theme-${theme}`);
+            localStorage.setItem('selectedTheme', theme);
+        }
+
+        window.changeLayout = function(layout) {
+            document.body.className = document.body.className.replace(/layout-\w+/, `layout-${layout}`);
+            localStorage.setItem('selectedLayout', layout);
+        }
+
+        // Load saved theme and layout
+        const savedTheme = localStorage.getItem('selectedTheme') || 'purple';
+        const savedLayout = localStorage.getItem('selectedLayout') || 'default';
+        document.body.className = `theme-${savedTheme} layout-${savedLayout}`;
+        document.getElementById('layoutSelect').value = savedLayout;
+        document.querySelector(`.theme-btn.${savedTheme}`)?.classList.add('active');
+
+        // Auth State Observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                if (userDoc.exists()) {
+                    window.currentUser = { uid: user.uid, ...userDoc.data() };
+                    loadApp();
+                }
+            } else {
+                showAuthScreen();
+            }
+        });
+
+        window.showAuthScreen = function() {
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('pendingScreen').classList.add('hidden');
+            document.getElementById('bannedScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        window.showRegister = function() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        window.showLogin = function() {
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        // Register with multiple admins
+        window.register = async function() {
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const fullName = document.getElementById('regFullName').value.trim();
+            const nickname = document.getElementById('regNickname').value.trim();
+            const photoFile = document.getElementById('regPhoto').files[0];
+
+            if (!email || !password || !fullName) {
+                alert('❌ Preencha email, senha e nome completo!');
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                let photoURL = 'https://via.placeholder.com/150';
+                if (photoFile) {
+                    photoURL = await fileToBase64(photoFile);
+                }
+
+                const isAdmin = ADMIN_EMAILS.includes(email);
+
+                await setDoc(doc(db, 'users', user.uid), {
+                    uid: user.uid,
+                    email: email,
+                    fullName: fullName,
+                    nickname: nickname || fullName,
+                    profilePhoto: photoURL,
+                    role: isAdmin ? 'admin' : 'member',
+                    status: isAdmin ? 'approved' : 'pending',
+                    loginMethod: 'email',
+                    createdAt: new Date().toISOString(),
+                    trainingPlan: {
+                        monday: '',
+                        tuesday: '',
+                        wednesday: '',
+                        thursday: '',
+                        friday: ''
+                    },
+                    activeDays: {
+                        monday: true,
+                        tuesday: true,
+                        wednesday: true,
+                        thursday: true,
+                        friday: true
+                    },
+                    attendance: {},
+                    justifications: {},
+                    streakSaved: {}
+                });
+
+                alert('✅ Conta criada com sucesso!');
+                window.location.reload();
+            } catch (error) {
+                console.error('Erro ao criar conta:', error);
+                alert('❌ Erro ao criar conta: ' + error.message);
+            }
+        }
+
+        window.login = async function() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                alert('❌ Preencha email e senha!');
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error('Erro ao fazer login:', error);
+                alert('❌ Erro ao fazer login: ' + error.message);
+            }
+        }
+
+        window.logout = async function() {
+            await signOut(auth);
+            window.location.reload();
+        }
+
+        async function loadApp() {
+            const user = window.currentUser;
+
+            if (user.status === 'pending') {
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('pendingScreen').classList.remove('hidden');
+                return;
+            }
+
+            if (user.status === 'banned') {
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('bannedScreen').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+
+            document.getElementById('headerAvatar').src = user.profilePhoto;
+            document.getElementById('headerName').textContent = user.nickname;
+
+            if (user.role === 'admin') {
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadAdminDashboard();
+            } else {
+                document.getElementById('memberDashboard').classList.remove('hidden');
+                loadMemberDashboard();
+                showMegaOfferPopup();
+            }
+        }
+
+        // Mega Offer Popup
+        async function showMegaOfferPopup() {
+            const offerDoc = await getDoc(doc(db, 'settings', 'megaoffer'));
+            
+            if (offerDoc.exists()) {
+                const offer = offerDoc.data();
+                const endDate = new Date(offer.endDate);
+                const now = new Date();
+
+                if (now <= endDate) {
+                    const discount = Math.round(((offer.originalPrice - offer.newPrice) / offer.originalPrice) * 100);
+                    
+                    document.getElementById('offerPopupTitle').textContent = offer.title;
+                    document.getElementById('offerPopupImage').src = offer.image;
+                    document.getElementById('offerPopupOldPrice').textContent = `R$ ${offer.originalPrice.toFixed(2)}`;
+                    document.getElementById('offerPopupNewPrice').textContent = `R$ ${offer.newPrice.toFixed(2)}`;
+                    document.getElementById('offerPopupDiscount').textContent = `-${discount}% OFF`;
+                    document.getElementById('offerPopupDescription').textContent = offer.description;
+
+                    setTimeout(() => {
+                        document.getElementById('megaOfferPopup').classList.add('active');
+                    }, 1000);
+                }
+            }
+        }
+
+        window.closeMegaOfferPopup = function() {
+            document.getElementById('megaOfferPopup').classList.remove('active');
+        }
+
+        // Member Dashboard
+        async function loadMemberDashboard() {
+            const user = window.currentUser;
+            document.getElementById('welcomeName').textContent = user.nickname;
+            loadMemberTraining();
+            loadMemberProducts();
+            loadWeeklyAttendance();
+            updateStreakDisplay();
+            
+            document.getElementById('editNickname').value = user.nickname;
+            document.getElementById('editPhotoPreview').src = user.profilePhoto;
+        }
+
+        function loadMemberTraining() {
+            const user = window.currentUser;
+            const container = document.getElementById('memberTrainingSchedule');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+            const dayNames = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira'];
+
+            container.innerHTML = '';
+
+            days.forEach((day, index) => {
+                const isActive = user.activeDays[day];
+                const training = user.trainingPlan[day] || 'Nenhum treino definido';
+
+                container.innerHTML += `
+                    <div class="training-day">
+                        <div class="training-day-header">
+                            <h4>${isActive ? '✅' : '❌'} ${dayNames[index]}</h4>
+                        </div>
+                        <p style="color: ${isActive ? '#e0e0e0' : '#888'}; line-height: 1.6;">
+                            ${isActive ? training : 'Dia de descanso'}
+                        </p>
+                    </div>
+                `;
+            });
+        }
+
+        // Weekly Attendance System
+        function getWeekDates() {
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+            
+            const weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(monday);
+                date.setDate(monday.getDate() + i);
+                weekDates.push({
+                    date: date,
+                    dateKey: date.toISOString().split('T')[0],
+                    dayName: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][date.getDay()]
+                });
+            }
+            return weekDates;
+        }
+
+        function loadWeeklyAttendance() {
+            const container = document.getElementById('weeklyAttendanceContainer');
+            const weekDates = getWeekDates();
+            const user = window.currentUser;
+            const today = new Date().toISOString().split('T')[0];
+            
+            container.innerHTML = '';
+
+            weekDates.forEach(day => {
+                const attendance = user.attendance?.[day.dateKey] || null;
+                let statusClass = '';
+                let statusIcon = '⚪';
+                let statusText = 'Não marcado';
+
+                if (attendance === 'present') {
+                    statusClass = 'present';
+                    statusIcon = '✅';
+                    statusText = 'Presente';
+                } else if (attendance === 'absent') {
+                    statusClass = 'absent';
+                    statusIcon = '❌';
+                    statusText = 'Faltou';
+                }
+
+                const isToday = day.dateKey === today;
+                const todayClass = isToday ? 'today' : '';
+
+                const dayHTML = `
+                    <div class="attendance-day ${statusClass} ${todayClass}" onclick="markWeeklyAttendance('${day.dateKey}')">
+                        <div class="attendance-day-name">${day.dayName}</div>
+                        <div class="attendance-day-date">${day.date.getDate()}/${day.date.getMonth() + 1}</div>
+                        <div class="attendance-status">${statusIcon}</div>
+                        <div class="attendance-label">${statusText}</div>
+                    </div>
+                `;
+                container.innerHTML += dayHTML;
+            });
+        }
+
+        window.markWeeklyAttendance = async function(dateKey) {
+            const user = window.currentUser;
+            const currentStatus = user.attendance?.[dateKey] || null;
+            
+            let newStatus;
+            if (currentStatus === null) {
+                newStatus = 'present';
+            } else if (currentStatus === 'present') {
+                // Marcar falta - exige justificativa
+                window.currentJustificationDay = dateKey;
+                document.getElementById('justificationModal').classList.add('active');
+                return;
+            } else {
+                newStatus = null;
+            }
+
+            const updatedAttendance = { ...user.attendance, [dateKey]: newStatus };
+            if (newStatus === null) {
+                delete updatedAttendance[dateKey];
+            }
+
+            try {
+                await updateDoc(doc(db, 'users', user.uid), {
+                    attendance: updatedAttendance
+                });
+
+                window.currentUser.attendance = updatedAttendance;
+                loadWeeklyAttendance();
+                updateStreakDisplay();
+            } catch (error) {
+                console.error('Erro ao marcar presença:', error);
+                alert('❌ Erro ao marcar presença');
+            }
+        }
+
+        // Justification Modal
+        window.closeJustificationModal = function() {
+            document.getElementById('justificationModal').classList.remove('active');
+            document.getElementById('justificationText').value = '';
+            window.currentJustificationDay = null;
+        }
+
+        window.submitJustification = async function() {
+            const justification = document.getElementById('justificationText').value.trim();
+            
+            if (!justification) {
+                alert('❌ Por favor, justifique sua falta!');
+                return;
+            }
+
+            if (justification.length < 10) {
+                alert('❌ A justificativa deve ter pelo menos 10 caracteres!');
+                return;
+            }
+
+            try {
+                const user = window.currentUser;
+                const attendance = user.attendance || {};
+                const justifications = user.justifications || {};
+
+                attendance[window.currentJustificationDay] = 'absent';
+                justifications[window.currentJustificationDay] = {
+                    reason: justification,
+                    timestamp: new Date().toISOString()
+                };
+
+                await updateDoc(doc(db, 'users', user.uid), {
+                    attendance: attendance,
+                    justifications: justifications
+                });
+
+                window.currentUser.attendance = attendance;
+                window.currentUser.justifications = justifications;
+                
+                alert('✅ Justificativa enviada com sucesso!');
+                closeJustificationModal();
+                loadWeeklyAttendance();
+                updateStreakDisplay();
+            } catch (error) {
+                console.error('Erro ao enviar justificativa:', error);
+                alert('❌ Erro ao enviar justificativa');
+            }
+        }
+
+        // Streak System
+        function calculateStreak(attendance) {
+            if (!attendance) return { current: 0, frozen: false, protection: 1 };
+
+            const weekDates = getWeekDates();
+            const currentWeekKeys = weekDates.map(d => d.dateKey);
+
+            // Contar faltas na semana atual
+            let weekMisses = 0;
+            currentWeekKeys.forEach(key => {
+                if (attendance[key] === 'absent') weekMisses++;
+            });
+
+            // Sistema de proteção e congelamento
+            let frozen = false;
+            let protection = 1;
+
+            if (weekMisses === 1) {
+                frozen = true;
+                protection = 0;
+            } else if (weekMisses >= 2) {
+                return { current: 0, frozen: false, protection: 0 };
+            }
+
+            // Calcular dias consecutivos
+            const dates = Object.keys(attendance).sort().reverse();
+            let currentStreak = 0;
+            let lastDate = null;
+
+            for (const dateKey of dates) {
+                if (attendance[dateKey] === 'present') {
+                    if (!lastDate) {
+                        currentStreak++;
+                        lastDate = new Date(dateKey);
+                    } else {
+                        const currentDate = new Date(dateKey);
+                        const diffDays = Math.floor((lastDate - currentDate) / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays === 1) {
+                            currentStreak++;
+                            lastDate = currentDate;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return { current: currentStreak, frozen, protection };
+        }
+
+        function updateStreakDisplay() {
+            const user = window.currentUser;
+            const streak = calculateStreak(user.attendance);
+
+            const container = document.getElementById('streakContainer');
+            if (!container) return;
+
+            const fireClass = streak.frozen ? 'frozen' : '';
+            const fireEmoji = streak.frozen ? '🧊' : '🔥';
+
+            container.innerHTML = `
+                <div class="streak-fire ${fireClass}">${fireEmoji}</div>
+                <div class="streak-number">${streak.current} dias</div>
+                <div class="streak-text">Sequência de treinos consecutivos</div>
+                ${streak.protection > 0 ? `
+                    <div class="streak-protection">
+                        🛡️ ${streak.protection} salvamento disponível esta semana
+                    </div>
+                ` : ''}
+                ${streak.frozen ? `
+                    <div class="streak-frozen-warning">
+                        ❄️ Sequência congelada! Não falte novamente esta semana ou seu foguinho resetará!
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // Products
+        async function loadMemberProducts() {
+            const snapshot = await getDocs(collection(db, 'products'));
+            const container = document.getElementById('memberProductsList');
+            
+            const offerDoc = await getDoc(doc(db, 'settings', 'megaoffer'));
+            let megaOfferHTML = '';
+
+            if (offerDoc.exists()) {
+                const offer = offerDoc.data();
+                const endDate = new Date(offer.endDate);
+                const now = new Date();
+
+                if (now <= endDate) {
+                    const discount = Math.round(((offer.originalPrice - offer.newPrice) / offer.originalPrice) * 100);
+                    
+                    megaOfferHTML = `
+                        <div class="card product-card" style="border: 3px solid #FFD93D; box-shadow: 0 0 30px rgba(255, 217, 61, 0.4);">
+                            <span class="badge-mega-offer">🔥 MEGA OFERTA 🔥</span>
+                            <img src="${offer.image}" alt="${offer.title}" class="product-image" onclick="openImageZoom('${offer.image}')">
+                            <div class="product-info">
+                                <h3>${offer.title}</h3>
+                                <p style="color: #b0b0b0; margin: 10px 0;">${offer.description}</p>
+                                <p style="color: #f5576c; font-size: 14px;">Válido até ${endDate.toLocaleDateString('pt-BR')}</p>
+                                <div>
+                                    <span class="product-old-price">R$ ${offer.originalPrice.toFixed(2)}</span>
+                                    <span class="product-price">R$ ${offer.newPrice.toFixed(2)}</span>
+                                    <span class="product-discount">-${discount}%</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-whatsapp" style="flex: 1; justify-content: center;" onclick="addMegaOfferToCart()">
+                                    🛒 Adicionar ao Carrinho
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = megaOfferHTML;
+
+            if (snapshot.empty && !megaOfferHTML) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">Nenhum produto disponível</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const product = { id: doc.id, ...doc.data() };
+                if (product.published && product.stock > 0) {
+                    container.innerHTML += createMemberProductCard(product);
+                }
+            });
+        }
+
+        function createMemberProductCard(product) {
+            const hasOffer = product.hasOffer && product.discount > 0;
+            const finalPrice = hasOffer ? (product.price * (1 - product.discount / 100)) : product.price;
+
+            return `
+                <div class="card product-card">
+                    ${product.image ? `<img src="${product.image}" alt="${product.name}" class="product-image" onclick="openImageZoom('${product.image}')">` : ''}
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p style="color: #b0b0b0; margin: 10px 0;">${product.description}</p>
+                        <p style="color: #888; font-size: 14px;">Categoria: ${product.category}</p>
+                        <span class="badge-stock">📦 Estoque: ${product.stock} unidades</span>
+                        <div style="margin-top: 10px;">
+                            ${hasOffer ? `<span class="product-old-price">R$ ${product.price.toFixed(2)}</span>` : ''}
+                            <span class="product-price">R$ ${finalPrice.toFixed(2)}</span>
+                            ${hasOffer ? `<span class="product-discount">-${product.discount}%</span>` : ''}
+                        </div>
+                        ${hasOffer && product.endDate ? `<p style="color: #f5576c; font-size: 13px; margin-top: 5px;">Oferta válida até ${new Date(product.endDate).toLocaleDateString('pt-BR')}</p>` : ''}
+                    </div>
+                    <div class="card-actions">
+                        ${product.nutritionTable ? `<button class="btn btn-warning" onclick="openImageZoom('${product.nutritionTable}')">📊 Tabela Nutricional</button>` : ''}
+                        <button class="btn btn-primary" onclick="addToCart('${product.id}', '${product.name}', ${finalPrice}, '${product.image || ''}')">🛒 Adicionar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.addToCart = function(id, name, price, image) {
+            const existingItem = window.shoppingCart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                window.shoppingCart.push({
+                    id,
+                    name,
+                    price,
+                    image,
+                    quantity: 1
+                });
+            }
+
+            updateCartDisplay();
+            alert(`✅ ${name} adicionado ao carrinho!`);
+        }
+
+        window.addMegaOfferToCart = async function() {
+            const offerDoc = await getDoc(doc(db, 'settings', 'megaoffer'));
+            
+            if (offerDoc.exists()) {
+                const offer = offerDoc.data();
+                addToCart('megaoffer', offer.title, offer.newPrice, offer.image);
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartCount = window.shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = cartCount;
+
+            const container = document.getElementById('cartItems');
+            const totalContainer = document.getElementById('cartTotal');
+
+            if (window.shoppingCart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">Seu carrinho está vazio 🛒</p>';
+                totalContainer.classList.add('hidden');
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = '';
+
+            window.shoppingCart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                            ${item.image ? `<img src="${item.image}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">` : ''}
+                            <div class="cart-item-info">
+                                <h4 style="margin-bottom: 5px;">${item.name}</h4>
+                                <p style="color: #b0b0b0; font-size: 14px;">R$ ${item.price.toFixed(2)} x ${item.quantity}</p>
+                                <p style="color: #4facfe; font-size: 16px; font-weight: 600;">Total: R$ ${itemTotal.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${index})">🗑️</button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cartTotalValue').textContent = total.toFixed(2);
+            totalContainer.classList.remove('hidden');
+        }
+
+        window.removeFromCart = function(index) {
+            window.shoppingCart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        window.sendOrderToWhatsApp = function() {
+            if (window.shoppingCart.length === 0) {
+                alert('❌ Seu carrinho está vazio!');
+                return;
+            }
+
+            const phoneNumber = '554474007855';
+            let message = `🏋️ *PEDIDO - Team Brunão*\n\n`;
+            message += `👤 *Cliente:* ${window.currentUser.fullName}\n`;
+            message += `📧 *Email:* ${window.currentUser.email}\n\n`;
+            message += `📦 *Produtos:*\n\n`;
+
+            let total = 0;
+
+            window.shoppingCart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                message += `${index + 1}. *${item.name}*\n`;
+                message += `   Quantidade: ${item.quantity}\n`;
+                message += `   Preço unitário: R$ ${item.price.toFixed(2)}\n`;
+                message += `   Subtotal: R$ ${itemTotal.toFixed(2)}\n\n`;
+            });
+
+            message += `💰 *TOTAL: R$ ${total.toFixed(2)}*\n\n`;
+            message += `Aguardo confirmação! 💪`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            window.open(whatsappURL, '_blank');
+        }
+
+        window.switchMemberTab = function(tab) {
+            document.querySelectorAll('#memberDashboard .tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('memberTrainingTab').classList.add('hidden');
+            document.getElementById('memberAttendanceTab').classList.add('hidden');
+            document.getElementById('memberProductsTab').classList.add('hidden');
+            document.getElementById('memberCartTab').classList.add('hidden');
+            document.getElementById('memberProfileTab').classList.add('hidden');
+
+            if (tab === 'training') {
+                document.getElementById('memberTrainingTab').classList.remove('hidden');
+            } else if (tab === 'attendance') {
+                document.getElementById('memberAttendanceTab').classList.remove('hidden');
+                loadWeeklyAttendance();
+            } else if (tab === 'products') {
+                document.getElementById('memberProductsTab').classList.remove('hidden');
+                loadMemberProducts();
+            } else if (tab === 'cart') {
+                document.getElementById('memberCartTab').classList.remove('hidden');
+                updateCartDisplay();
+            } else if (tab === 'profile') {
+                document.getElementById('memberProfileTab').classList.remove('hidden');
+            }
+        }
+
+        window.updateProfile = async function() {
+            const nickname = document.getElementById('editNickname').value.trim();
+            const photoFile = document.getElementById('editPhoto').files[0];
+            const newEmail = document.getElementById('editEmail').value.trim();
+            const newPassword = document.getElementById('editPassword').value.trim();
+
+            try {
+                const updates = {};
+
+                if (nickname) updates.nickname = nickname;
+
+                if (photoFile) {
+                    updates.profilePhoto = await fileToBase64(photoFile);
+                }
+
+                await updateDoc(doc(db, 'users', window.currentUser.uid), updates);
+
+                if (newEmail) {
+                    await updateEmail(auth.currentUser, newEmail);
+                    updates.email = newEmail;
+                }
+
+                if (newPassword) {
+                    await updatePassword(auth.currentUser, newPassword);
+                }
+
+                alert('✅ Perfil atualizado com sucesso!');
+                window.location.reload();
+            } catch (error) {
+                console.error('Erro ao atualizar perfil:', error);
+                alert('❌ Erro ao atualizar perfil: ' + error.message);
+            }
+        }
+
+        // Admin Dashboard
+        async function loadAdminDashboard() {
+            loadPendingUsers();
+            loadApprovedUsers();
+            loadBannedUsers();
+            loadProducts();
+            loadCurrentMegaOffer();
+            
+            const user = window.currentUser;
+            document.getElementById('adminEditNickname').value = user.nickname;
+            document.getElementById('adminEditPhotoPreview').src = user.profilePhoto;
+        }
+
+        async function loadPendingUsers() {
+            const q = query(collection(db, 'users'), where('status', '==', 'pending'));
+            const snapshot = await getDocs(q);
+            const container = document.getElementById('pendingUsers');
+            
+            container.innerHTML = '';
+
+            if (snapshot.empty) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">Nenhuma conta pendente</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                container.innerHTML += createUserCard(user, 'pending');
+            });
+        }
+
+        async function loadApprovedUsers() {
+            const q = query(collection(db, 'users'), where('status', '==', 'approved'), where('role', '==', 'member'));
+            const snapshot = await getDocs(q);
+            const container = document.getElementById('approvedUsers');
+            
+            window.allApprovedUsers = [];
+            container.innerHTML = '';
+
+            if (snapshot.empty) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">Nenhuma conta aprovada</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                window.allApprovedUsers.push(user);
+                container.innerHTML += createUserCard(user, 'approved');
+            });
+        }
+
+        async function loadBannedUsers() {
+            const q = query(collection(db, 'users'), where('status', '==', 'banned'));
+            const snapshot = await getDocs(q);
+            const container = document.getElementById('bannedUsers');
+            
+            container.innerHTML = '';
+
+            if (snapshot.empty) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">Nenhuma conta banida</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                container.innerHTML += createUserCard(user, 'banned');
+            });
+        }
+
+        function createUserCard(user, type) {
+            let badge = '';
+            let actions = '';
+
+            if (type === 'pending') {
+                badge = '<span class="badge badge-pending">⏳ Pendente</span>';
+                actions = `
+                    <button class="btn btn-success" onclick="approveUser('${user.uid}')">✅ Aprovar</button>
+                    <button class="btn btn-danger" onclick="banUser('${user.uid}')">🚫 Recusar</button>
+                `;
+            } else if (type === 'approved') {
+                badge = '<span class="badge badge-approved">✅ Aprovado</span>';
+                actions = `
+                    <button class="btn btn-primary" onclick="viewUserDetails('${user.uid}')">👁️ Ver Detalhes</button>
+                    <button class="btn btn-warning" onclick="viewUserAttendanceHistory('${user.uid}')">📅 Ver Presença</button>
+                `;
+            } else if (type === 'banned') {
+                badge = '<span class="badge badge-banned">🚫 Banido</span>';
+                actions = `
+                    <button class="btn btn-success" onclick="unbanUser('${user.uid}')">✅ Remover Ban</button>
+                `;
+            }
+
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <img src="${user.profilePhoto}" alt="Avatar" class="card-avatar">
+                        <div class="card-info">
+                            <h3>${user.fullName}</h3>
+                            <p>${user.nickname}</p>
+                            <p style="font-size: 13px; color: #888;">${user.email}</p>
+                        </div>
+                    </div>
+                    ${badge}
+                    <div class="card-actions">
+                        ${actions}
+                    </div>
+                </div>
+            `;
+        }
+
+        window.approveUser = async function(uid) {
+            try {
+                await updateDoc(doc(db, 'users', uid), { status: 'approved' });
+                alert('✅ Usuário aprovado!');
+                loadAdminDashboard();
+            } catch (error) {
+                console.error('Erro ao aprovar usuário:', error);
+                alert('❌ Erro ao aprovar usuário');
+            }
+        }
+
+        window.banUser = async function(uid) {
+            try {
+                await updateDoc(doc(db, 'users', uid), { status: 'banned' });
+                alert('✅ Usuário banido!');
+                loadAdminDashboard();
+            } catch (error) {
+                console.error('Erro ao banir usuário:', error);
+                alert('❌ Erro ao banir usuário');
+            }
+        }
+
+        window.unbanUser = async function(uid) {
+            try {
+                await updateDoc(doc(db, 'users', uid), { status: 'approved' });
+                alert('✅ Banimento removido!');
+                loadAdminDashboard();
+            } catch (error) {
+                console.error('Erro ao remover banimento:', error);
+                alert('❌ Erro ao remover banimento');
+            }
+        }
+
+        window.viewUserDetails = async function(uid) {
+            const userDoc = await getDoc(doc(db, 'users', uid));
+            const user = userDoc.data();
+            window.currentEditingUser = user;
+
+            document.getElementById('userDetailPhoto').src = user.profilePhoto;
+            document.getElementById('userDetailName').textContent = user.fullName;
+            document.getElementById('userDetailNickname').textContent = user.nickname;
+            document.getElementById('userDetailEmail').textContent = user.email;
+
+            document.getElementById('userDetailsModal').classList.add('active');
+        }
+
+        window.closeUserDetailsModal = function() {
+            document.getElementById('userDetailsModal').classList.remove('active');
+        }
+
+        window.viewUserAttendanceHistory = async function(uid) {
+            const userDoc = await getDoc(doc(db, 'users', uid));
+            const user = userDoc.data();
+
+            const attendance = user.attendance || {};
+            const justifications = user.justifications || {};
+
+            let attendanceHTML = '<div class="attendance-history">';
+            
+            const sortedDates = Object.keys(attendance).sort().reverse();
+
+            if (sortedDates.length === 0) {
+                attendanceHTML += '<p style="text-align: center; color: #888;">Nenhum registro de presença</p>';
+            } else {
+                sortedDates.forEach(dateKey => {
+                    const status = attendance[dateKey];
+                    const justification = justifications[dateKey];
+                    const date = new Date(dateKey);
+                    const dateStr = date.toLocaleDateString('pt-BR');
+
+                    const statusIcon = status === 'present' ? '✅' : '❌';
+                    const statusText = status === 'present' ? 'Presente' : 'Faltou';
+                    const statusColor = status === 'present' ? '#4facfe' : '#f5576c';
+
+                    attendanceHTML += `
+                        <div class="attendance-record ${status}">
+                            <div class="attendance-record-header">
+                                <div>
+                                    <strong>${dateStr}</strong> ${statusIcon} ${statusText}
+                                </div>
+                                ${status === 'absent' && justification ? `
+                                    <button class="btn btn-warning" style="padding: 6px 12px; font-size: 12px;" onclick="saveUserStreak('${uid}', '${dateKey}')">💾 Salvar Sequência</button>
+                                ` : ''}
+                            </div>
+                            ${status === 'absent' && justification ? `
+                                <div class="justification-box">
+                                    <strong>Justificativa:</strong>
+                                    ${justification.reason}
+                                    <div style="margin-top: 8px; font-size: 12px; opacity: 0.7;">
+                                        Enviada em: ${new Date(justification.timestamp).toLocaleString('pt-BR')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            attendanceHTML += '</div>';
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Histórico de Presença - ${user.fullName}</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    ${attendanceHTML}
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        window.saveUserStreak = async function(uid, dateKey) {
+            if (!confirm('Tem certeza que deseja salvar a sequência deste usuário? Isso irá converter a falta em presença.')) {
+                return;
+            }
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data();
+                const attendance = userData.attendance || {};
+
+                attendance[dateKey] = 'present';
+
+                await updateDoc(doc(db, 'users', uid), {
+                    attendance: attendance,
+                    [`streakSaved.${dateKey}`]: {
+                        savedBy: window.currentUser.uid,
+                        savedAt: new Date().toISOString()
+                    }
+                });
+
+                alert('✅ Sequência salva com sucesso!');
+                document.querySelector('.modal.active')?.remove();
+                viewUserAttendanceHistory(uid);
+            } catch (error) {
+                console.error('Erro ao salvar sequência:', error);
+                alert('❌ Erro ao salvar sequência');
+            }
+        }
+
+        window.openTrainingModalForUser = function() {
+            closeUserDetailsModal();
+            const user = window.currentEditingUser;
+            const container = document.getElementById('trainingModalContent');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+            const dayNames = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira'];
+
+            container.innerHTML = '';
+
+            days.forEach((day, index) => {
+                const isActive = user.activeDays[day];
+                const training = user.trainingPlan[day] || '';
+
+                container.innerHTML += `
+                    <div class="training-day">
+                        <div class="training-day-header">
+                            <h4>${dayNames[index]}</h4>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="active_${day}" ${isActive ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <textarea id="training_${day}" placeholder="Descreva o treino..." rows="4" style="width: 100%; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); color: white; margin-top: 10px; font-family: inherit;">${training}</textarea>
+                    </div>
+                `;
+            });
+
+            document.getElementById('trainingModal').classList.add('active');
+        }
+
+        window.saveTraining = async function() {
+            const user = window.currentEditingUser;
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+            const trainingPlan = {};
+            const activeDays = {};
+
+            days.forEach(day => {
+                trainingPlan[day] = document.getElementById(`training_${day}`).value.trim();
+                activeDays[day] = document.getElementById(`active_${day}`).checked;
+            });
+
+            try {
+                await updateDoc(doc(db, 'users', user.uid), {
+                    trainingPlan: trainingPlan,
+                    activeDays: activeDays
+                });
+
+                alert('✅ Treino salvo com sucesso!');
+                closeTrainingModal();
+                loadAdminDashboard();
+            } catch (error) {
+                console.error('Erro ao salvar treino:', error);
+                alert('❌ Erro ao salvar treino');
+            }
+        }
+
+        window.closeTrainingModal = function() {
+            document.getElementById('trainingModal').classList.remove('active');
+        }
+
+        window.searchUsers = function() {
+            const searchTerm = document.getElementById('searchUsers').value.toLowerCase();
+            const container = document.getElementById('approvedUsers');
+            
+            const filtered = window.allApprovedUsers.filter(user => {
+                return user.fullName.toLowerCase().includes(searchTerm) ||
+                       user.nickname.toLowerCase().includes(searchTerm) ||
+                       user.email.toLowerCase().includes(searchTerm);
+            });
+
+            container.innerHTML = '';
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">Nenhum resultado encontrado</p>';
+                return;
+            }
+
+            filtered.forEach(user => {
+                container.innerHTML += createUserCard(user, 'approved');
+            });
+        }
+
+        window.switchAdminTab = function(tab) {
+            document.querySelectorAll('#adminDashboard .tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('adminPendingTab').classList.add('hidden');
+            document.getElementById('adminApprovedTab').classList.add('hidden');
+            document.getElementById('adminBannedTab').classList.add('hidden');
+            document.getElementById('adminProductsTab').classList.add('hidden');
+            document.getElementById('adminMegaOfferTab').classList.add('hidden');
+            document.getElementById('adminProfileTab').classList.add('hidden');
+
+            if (tab === 'pending') {
+                document.getElementById('adminPendingTab').classList.remove('hidden');
+            } else if (tab === 'approved') {
+                document.getElementById('adminApprovedTab').classList.remove('hidden');
+            } else if (tab === 'banned') {
+                document.getElementById('adminBannedTab').classList.remove('hidden');
+            } else if (tab === 'products') {
+                document.getElementById('adminProductsTab').classList.remove('hidden');
+            } else if (tab === 'megaoffer') {
+                document.getElementById('adminMegaOfferTab').classList.remove('hidden');
+            } else if (tab === 'profile') {
+                document.getElementById('adminProfileTab').classList.remove('hidden');
+            }
+        }
+
+        window.updateAdminProfile = async function() {
+            const nickname = document.getElementById('adminEditNickname').value.trim();
+            const photoFile = document.getElementById('adminEditPhoto').files[0];
+
+            try {
+                const updates = {};
+
+                if (nickname) updates.nickname = nickname;
+
+                if (photoFile) {
+                    updates.profilePhoto = await fileToBase64(photoFile);
+                }
+
+                await updateDoc(doc(db, 'users', window.currentUser.uid), updates);
+
+                alert('✅ Perfil atualizado com sucesso!');
+                window.location.reload();
+            } catch (error) {
+                console.error('Erro ao atualizar perfil:', error);
+                alert('❌ Erro ao atualizar perfil: ' + error.message);
+            }
+        }
+
+        // Products Management
+        async function loadProducts() {
+            const snapshot = await getDocs(collection(db, 'products'));
+            const container = document.getElementById('productsList');
+            
+            container.innerHTML = '';
+
+            if (snapshot.empty) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">Nenhum produto cadastrado</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const product = { id: doc.id, ...doc.data() };
+                container.innerHTML += createProductCardAdmin(product);
+            });
+        }
+
+        function createProductCardAdmin(product) {
+            const hasOffer = product.hasOffer && product.discount > 0;
+            const finalPrice = hasOffer ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price.toFixed(2);
+            const published = product.published || false;
+
+            return `
+                <div class="card product-card">
+                    ${published ? '<div class="product-published-badge">✅ PUBLICADO</div>' : '<div class="product-unpublished-badge">⚠️ NÃO PUBLICADO</div>'}
+                    ${product.image ? `<img src="${product.image}" alt="${product.name}" class="product-image">` : ''}
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p style="color: #b0b0b0; margin: 10px 0;">${product.description}</p>
+                        <p style="color: #888; font-size: 14px;">Categoria: ${product.category}</p>
+                        <span class="badge-stock">📦 Estoque: ${product.stock} unidades</span>
+                        <div style="margin-top: 10px;">
+                            ${hasOffer ? `<span class="product-old-price">R$ ${product.price.toFixed(2)}</span>` : ''}
+                            <span class="product-price">R$ ${finalPrice}</span>
+                            ${hasOffer ? `<span class="product-discount">-${product.discount}%</span>` : ''}
+                        </div>
+                        ${hasOffer && product.endDate ? `<p style="color: #f5576c; font-size: 13px; margin-top: 5px;">Oferta válida até ${new Date(product.endDate).toLocaleDateString('pt-BR')}</p>` : ''}
+                        ${product.nutritionTable ? `<p style="color: #4facfe; font-size: 13px; margin-top: 5px;">✅ Com tabela nutricional</p>` : ''}
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn ${published ? 'btn-warning' : 'btn-success'}" onclick="toggleProductPublish('${product.id}')">
+                            ${published ? '📤 Despublicar' : '📢 Publicar'}
+                        </button>
+                        <button class="btn btn-primary" onclick="editProduct('${product.id}')">✏️ Editar</button>
+                        <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">🗑️ Deletar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.toggleProductPublish = async function(productId) {
+            try {
+                const productDoc = await getDoc(doc(db, 'products', productId));
+                const product = productDoc.data();
+                const newPublishedState = !product.published;
+
+                await updateDoc(doc(db, 'products', productId), {
+                    published: newPublishedState,
+                    publishedAt: newPublishedState ? new Date().toISOString() : null
+                });
+
+                alert(newPublishedState ? '✅ Produto publicado com sucesso!' : '⚠️ Produto despublicado!');
+                loadProducts();
+            } catch (error) {
+                console.error('Erro ao publicar produto:', error);
+                alert('❌ Erro ao publicar produto');
+            }
+        }
+
+        window.openProductModal = function(productId = null) {
+            window.currentEditingProduct = productId;
+            
+            if (productId) {
+                document.getElementById('productModalTitle').textContent = 'Editar Produto';
+                loadProductData(productId);
+            } else {
+                document.getElementById('productModalTitle').textContent = 'Criar Produto';
+                clearProductForm();
+            }
+
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        async function loadProductData(productId) {
+            const productDoc = await getDoc(doc(db, 'products', productId));
+            const product = productDoc.data();
+
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock || 0;
+            document.getElementById('productCategory').value = product.category;
+            
+            if (product.image) {
+                document.getElementById('productImagePreview').src = product.image;
+                document.getElementById('productImagePreview').classList.remove('hidden');
+            }
+
+            if (product.nutritionTable) {
+                document.getElementById('nutritionTablePreview').src = product.nutritionTable;
+                document.getElementById('nutritionTablePreview').classList.remove('hidden');
+            }
+
+            document.getElementById('productHasOffer').checked = product.hasOffer || false;
+            
+            if (product.hasOffer) {
+                document.getElementById('offerFields').classList.remove('hidden');
+                document.getElementById('productDiscount').value = product.discount || 0;
+                document.getElementById('productOfferEnd').value = product.endDate || '';
+            }
+        }
+
+        function clearProductForm() {
+            document.getElementById('productName').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productStock').value = '';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productImage').value = '';
+            document.getElementById('productImagePreview').classList.add('hidden');
+            document.getElementById('productNutritionTable').value = '';
+            document.getElementById('nutritionTablePreview').classList.add('hidden');
+            document.getElementById('productHasOffer').checked = false;
+            document.getElementById('offerFields').classList.add('hidden');
+            document.getElementById('productDiscount').value = '';
+            document.getElementById('productOfferEnd').value = '';
+        }
+
+        window.toggleOfferFields = function() {
+            const hasOffer = document.getElementById('productHasOffer').checked;
+            const offerFields = document.getElementById('offerFields');
+            
+            if (hasOffer) {
+                offerFields.classList.remove('hidden');
+            } else {
+                offerFields.classList.add('hidden');
+            }
+        }
+
+        window.saveProduct = async function() {
+            const name = document.getElementById('productName').value.trim();
+            const description = document.getElementById('productDescription').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const stock = parseInt(document.getElementById('productStock').value) || 0;
+            const category = document.getElementById('productCategory').value.trim();
+            const photoFile = document.getElementById('productImage').files[0];
+            const nutritionFile = document.getElementById('productNutritionTable').files[0];
+            const hasOffer = document.getElementById('productHasOffer').checked;
+            const discount = hasOffer ? parseInt(document.getElementById('productDiscount').value) : 0;
+            const endDate = hasOffer ? document.getElementById('productOfferEnd').value : '';
+
+            if (!name || !description || !price || !category) {
+                alert('❌ Preencha todos os campos obrigatórios!');
+                return;
+            }
+
+            try {
+                const productData = {
+                    name,
+                    description,
+                    price,
+                    stock,
+                    category,
+                    hasOffer,
+                    discount,
+                    endDate,
+                    published: window.currentEditingProduct ? (await getDoc(doc(db, 'products', window.currentEditingProduct))).data().published || false : false,
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (photoFile) {
+                    productData.image = await fileToBase64(photoFile);
+                } else if (window.currentEditingProduct) {
+                    const existingProduct = await getDoc(doc(db, 'products', window.currentEditingProduct));
+                    productData.image = existingProduct.data().image;
+                }
+
+                if (nutritionFile) {
+                    productData.nutritionTable = await fileToBase64(nutritionFile);
+                } else if (window.currentEditingProduct) {
+                    const existingProduct = await getDoc(doc(db, 'products', window.currentEditingProduct));
+                    productData.nutritionTable = existingProduct.data().nutritionTable || null;
+                }
+
+                if (window.currentEditingProduct) {
+                    await updateDoc(doc(db, 'products', window.currentEditingProduct), productData);
+                    alert('✅ Produto atualizado com sucesso!');
+                } else {
+                    productData.createdAt = new Date().toISOString();
+                    await setDoc(doc(collection(db, 'products')), productData);
+                    alert('✅ Produto criado com sucesso!');
+                }
+
+                closeProductModal();
+                loadProducts();
+            } catch (error) {
+                console.error('Erro ao salvar produto:', error);
+                alert('❌ Erro ao salvar produto');
+            }
+        }
+
+        window.editProduct = function(productId) {
+            openProductModal(productId);
+        }
+
+        window.deleteProduct = async function(productId) {
+            if (!confirm('Tem certeza que deseja deletar este produto?')) {
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, 'products', productId));
+                alert('✅ Produto deletado com sucesso!');
+                loadProducts();
+            } catch (error) {
+                console.error('Erro ao deletar produto:', error);
+                alert('❌ Erro ao deletar produto');
+            }
+        }
+
+        window.closeProductModal = function() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        // Mega Offer Management
+        async function loadCurrentMegaOffer() {
+            const offerDoc = await getDoc(doc(db, 'settings', 'megaoffer'));
+            const container = document.getElementById('currentMegaOffer');
+
+            if (!offerDoc.exists()) {
+                container.innerHTML = '<p style="text-align: center; color: #888; margin-top: 30px;">Nenhuma mega oferta criada</p>';
+                return;
+            }
+
+            const offer = offerDoc.data();
+            const discount = Math.round(((offer.originalPrice - offer.newPrice) / offer.originalPrice) * 100);
+            const endDate = new Date(offer.endDate);
+            const now = new Date();
+            const isActive = now <= endDate;
+
+            document.getElementById('megaOfferTitle').value = offer.title;
+            document.getElementById('megaOfferDescription').value = offer.description;
+            document.getElementById('megaOfferOriginalPrice').value = offer.originalPrice;
+            document.getElementById('megaOfferNewPrice').value = offer.newPrice;
+            document.getElementById('megaOfferEndDate').value = offer.endDate;
+
+            if (offer.image) {
+                document.getElementById('megaOfferImagePreview').src = offer.image;
+                document.getElementById('megaOfferImagePreview').classList.remove('hidden');
+            }
+
+            container.innerHTML = `
+                <div class="card" style="max-width: 700px; margin: 30px auto; border: 3px solid ${isActive ? '#4FFFB0' : '#f5576c'};">
+                    <h3 style="margin-bottom: 20px;">${isActive ? '✅ Mega Oferta Ativa' : '❌ Mega Oferta Expirada'}</h3>
+                    ${offer.image ? `<img src="${offer.image}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 15px; margin-bottom: 20px;">` : ''}
+                    <h2 style="font-size: 28px; margin-bottom: 10px;">${offer.title}</h2>
+                    <p style="color: #b0b0b0; margin-bottom: 15px; line-height: 1.6;">${offer.description}</p>
+                    <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0;">
+                        <span style="font-size: 24px; text-decoration: line-through; color: #888;">R$ ${offer.originalPrice.toFixed(2)}</span>
+                        <span style="font-size: 36px; font-weight: 700; color: #4FFFB0;">R$ ${offer.newPrice.toFixed(2)}</span>
+                        <span style="background: #f5576c; color: white; padding: 8px 15px; border-radius: 20px; font-weight: 700;">-${discount}%</span>
+                    </div>
+                    <p style="color: ${isActive ? '#4FFFB0' : '#f5576c'}; font-size: 16px; font-weight: 600;">
+                        ${isActive ? `✅ Válida até ${endDate.toLocaleDateString('pt-BR')}` : `❌ Expirou em ${endDate.toLocaleDateString('pt-BR')}`}
+                    </p>
+                </div>
+            `;
+        }
+
+        window.saveMegaOffer = async function() {
+            const title = document.getElementById('megaOfferTitle').value.trim();
+            const description = document.getElementById('megaOfferDescription').value.trim();
+            const originalPrice = parseFloat(document.getElementById('megaOfferOriginalPrice').value);
+            const newPrice = parseFloat(document.getElementById('megaOfferNewPrice').value);
+            const endDate = document.getElementById('megaOfferEndDate').value;
+            const imageFile = document.getElementById('megaOfferImage').files[0];
+
+            if (!title || !description || !originalPrice || !newPrice || !endDate) {
+                alert('❌ Preencha todos os campos!');
+                return;
+            }
+
+            if (newPrice >= originalPrice) {
+                alert('❌ O preço com desconto deve ser menor que o preço original!');
+                return;
+            }
+
+            try {
+                const offerData = {
+                    title,
+                    description,
+                    originalPrice,
+                    newPrice,
+                    endDate,
+                    updatedAt: new Date().toISOString(),
+                    createdBy: window.currentUser.uid
+                };
+
+                if (imageFile) {
+                    offerData.image = await fileToBase64(imageFile);
+                } else {
+                    const existingOffer = await getDoc(doc(db, 'settings', 'megaoffer'));
+                    if (existingOffer.exists()) {
+                        offerData.image = existingOffer.data().image || '';
+                    } else {
+                        alert('❌ Por favor, selecione uma imagem para a oferta!');
+                        return;
+                    }
+                }
+
+                await setDoc(doc(db, 'settings', 'megaoffer'), offerData);
+                alert('✅ Mega oferta salva com sucesso!');
+                loadCurrentMegaOffer();
+            } catch (error) {
+                console.error('Erro ao salvar mega oferta:', error);
+                alert('❌ Erro ao salvar mega oferta: ' + error.message);
+            }
+        }
+
+        // Image Zoom with Controls
+        window.openImageZoom = function(imageSrc) {
+            document.getElementById('zoomImage').src = imageSrc;
+            document.getElementById('zoomImage').classList.remove('zoomed');
+            document.getElementById('imageZoomModal').classList.add('active');
+            window.zoomLevel = 1;
+        }
+
+        window.closeImageZoom = function() {
+            document.getElementById('imageZoomModal').classList.remove('active');
+            window.zoomLevel = 1;
+        }
+
+        window.toggleZoom = function() {
+            const img = document.getElementById('zoomImage');
+            img.classList.toggle('zoomed');
+        }
+
+        window.zoomIn = function() {
+            window.zoomLevel = Math.min(window.zoomLevel + 0.2, 3);
+            document.getElementById('zoomImage').style.transform = `scale(${window.zoomLevel})`;
+        }
+
+        window.zoomOut = function() {
+            window.zoomLevel = Math.max(window.zoomLevel - 0.2, 0.5);
+            document.getElementById('zoomImage').style.transform = `scale(${window.zoomLevel})`;
+        }
+
+        window.resetZoom = function() {
+            window.zoomLevel = 1;
+            document.getElementById('zoomImage').style.transform = 'scale(1)';
+            document.getElementById('zoomImage').classList.remove('zoomed');
+        }
+
+        // Preview Photo
+        window.previewPhoto = function(input, previewId) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewId);
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // File to Base64
+        async function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+            if (event.target.id === 'imageZoomModal') {
+                closeImageZoom();
+            }
+        }
+    </script>
+</body>
+</html>
